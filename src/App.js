@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import api from './api.json';
-import { Card } from 'antd';
+import { Card, Input } from 'antd';
+
+const Search = Input.Search;
 
 export default class App extends Component {
   constructor(props){
@@ -27,13 +29,28 @@ export default class App extends Component {
 
 
   }
+
+  getRequest = (value) => {
+    const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    var url =`https://tastedive.com/api/similar?k=${api.key}&q=`;
+    url += value;
+    fetch(proxyurl + url)
+      .then(response => response.json())
+      .then(res => this.setState({results: res.Similar.Results}))
+
+
+  }
+
   render() {
     const similars = this.state.results;
-    debugger
     return (
       <div className="App">
         <header className="App-header">
-
+          <Search
+            placeholder="input search text"
+            onSearch={value => this.getRequest(value)}
+            enterButton
+          />
         </header>
 
         <div className="body_app">
